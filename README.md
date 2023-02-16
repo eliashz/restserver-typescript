@@ -2,4 +2,5 @@
 
 # Links
 
+- [Sequelize](https://sequelize.org/)
 - [TablePlus](https://tableplus.com/)
