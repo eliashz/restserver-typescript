@@ -1,4 +1,8 @@
 # Rest Server con TypeScript
+- `npm i`
+- `tsc`
+- `npm start`
+- `tsc --watch`
 
 # Links
 
