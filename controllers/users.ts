@@ -70,8 +70,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     if (!user || !user.status)
       return res.status(400).json({ msg: `User with ID ${id} not exits.` });
 
-    user.set({ status: 0 });
-    await user.save();
+    await user.update({ status: false });
 
     res.json({ msg: "User deleted", user });
   } catch (error) {
