@@ -16,22 +16,66 @@ export const getUser = async (req: Request, res: Response) => {
   res.json(user);
 };
 
-export const postUser = (req: Request, res: Response) => {
+export const postUser = async (req: Request, res: Response) => {
   const { body } = req;
-  console.log(body);
 
-  res.json({ msg: "postUser", body });
+  try {
+    const emailExists = await User.findOne({
+      where: {
+        email: body.email,
+      },
+    });
+    console.log(emailExists);
+    if (emailExists || emailExists)
+      return res.status(400).json({
+        msg: "User with this e-mail already exits.",
+      });
+
+    const user = await User.create(body);
+    console.log(user);
+
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ ehh: error });
+  }
 };
 
-export const putUser = (req: Request, res: Response) => {
+export const putUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { body } = req;
 
-  res.json({ msg: "putUser", body, id });
+  try {
+    const user = await User.findByPk(id);
+
+    if (!user)
+      return res.status(400).json({ msg: `User with ID ${id} not exits.` });
+
+    await user.update(body);
+
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ ehh: error });
+  }
 };
 
-export const deleteUser = (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  res.json({ msg: "deleteUser", id });
+  try {
+    let user = {} as any;
+    user = await User.findByPk(id);
+
+    if (!user || !user.status)
+      return res.status(400).json({ msg: `User with ID ${id} not exits.` });
+
+    user.set({ status: 0 });
+    await user.save();
+
+    res.json({ msg: "User deleted", user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ ehh: error });
+  }
 };
